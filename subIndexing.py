@@ -19,18 +19,18 @@ for subj in subjects:
     for f in files:
         parts = f.split(os.sep)
         for part in parts:
-            if part in ['anat', 'meg', 'func', 'dwi', 'fmap']:
+            if part in ['anat', 'meg', 'func', 'dwi', 'fmap', 'eeg', 'ieg']:
                 modalities.add(part)
 
     # Get info from participants.tsv
     participant_info = participants_df[participants_df['participant_id'] == subj]
     age = participant_info.iloc[0].get('age') if not participant_info.empty else None
-    sex = participant_info.iloc[0].get('hand') if not participant_info.empty else None
+    handedness = participant_info.iloc[0].get('hand') if not participant_info.empty else None
 
     doc = {
         "subject": subj,
         "age": age,
-        "sex": sex,
+        "handedness": handedness,
         "sessions": len(layout.get_sessions(subject=subj)),
         "modalities": list(modalities)
     }
