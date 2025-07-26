@@ -37,3 +37,4 @@ for subj in subjects:
 
     print(doc)
     # es.index(index="bids-subjects", document=doc)
+

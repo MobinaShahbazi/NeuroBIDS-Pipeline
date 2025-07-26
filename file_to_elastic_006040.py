@@ -1,41 +1,30 @@
 from bids import BIDSLayout
 import pandas as pd
+import os
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
 
 # Load layout
 layout = BIDSLayout(r"E:\term8\5. Bachelor Project\search\BIDS\datasets\ds006040", validate=False)
 
-# Load participants.tsv
-participants_df = pd.read_csv(r"E:\term8\5. Bachelor Project\search\BIDS\datasets\ds006040\Demographic_Information.tsv", sep='\t')
-participants_df['Anonymized ID'] = participants_df['Anonymized ID'].str.replace('sub-', '')
-participants_df['Gender'] = participants_df['Gender'].replace({'1': 'man', '0': 'woman'})
-
 # Prepare bulk data
 actions = []
-index_name = "subject_v2"
+index_name = "file_v1"
 
-subjects = sorted(layout.get_subjects() + ['003'])
-print(subjects)
-for subj in subjects:
-    files = layout.get(subject=subj)
-    modalities = sorted({f.datatype for f in files if f.datatype})
+files = layout.get()
+print(len(files))
+df = layout.to_df()
+df = df[~df['path'].str.contains(r'\.git', case=False, regex=True)]
 
-    participant_info = participants_df[participants_df['Anonymized ID'] == subj]
-
-    info_dict = participant_info.iloc[0].to_dict()
-    info_dict['modalities'] = modalities
-    info_dict['subject'] = subj 
-    for field in ['Height', 'Weight', 'Age']:
-        value = info_dict.get(field)
-        try:
-            info_dict[field] = int(value)
-        except (ValueError, TypeError):
-            info_dict[field] = None
-
+for _, row in df.iterrows():
+    doc = row.dropna().to_dict()
     
-    doc = info_dict
-    # print(doc)
+    file_path = row['path']
+    try:
+        file_size = os.path.getsize(file_path)  # byte
+        doc['filesize'] = file_size
+    except OSError:
+        doc['filesize'] = None 
 
     action = {
         "_index": index_name,
@@ -43,6 +32,7 @@ for subj in subjects:
     }
     actions.append(action)
 
+# ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 # Elasticsearch connection with authentication
 es = Elasticsearch(

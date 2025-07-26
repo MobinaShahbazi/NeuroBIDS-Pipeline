@@ -28,7 +28,7 @@ if not es.ping():
 else:
     print("✅ اتصال به Elasticsearch برقرار شد.")
 
-index_name = "subject_v0"
+index_name = "subject_v2"
 
 # Optional: Delete index if exists (for clean run)
 if es.indices.exists(index=index_name):
