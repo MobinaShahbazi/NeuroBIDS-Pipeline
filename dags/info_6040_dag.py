@@ -132,8 +132,8 @@ def load_info_to_elasticsearch():
 with DAG(
     dag_id="bids_info_6040",
     default_args=default_args,
-    schedule_interval=None,
-    catchup=False,
+    schedule_interval='@daily', 
+    catchup=True,
     description="Extract anat/func/dwi JSON metadata and beh TSV data from dataset and load into Elasticsearch",
 ) as dag:
 

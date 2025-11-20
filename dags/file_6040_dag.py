@@ -63,7 +63,7 @@ with DAG(
     dag_id="bids_files_6040",
     default_args=default_args,
     schedule_interval='@daily',
-    catchup=False,
+    catchup=True,
     description="Upload dataset files metadata to Elasticsearch",
 ) as dag:
 

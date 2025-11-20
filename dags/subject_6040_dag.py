@@ -78,7 +78,7 @@ with DAG(
     dag_id="bids_subjects_6040",
     default_args=default_args,
     schedule_interval='@daily',  
-    catchup=False,
+    catchup=True,
     description="Extract data from BIDS dataset and upload to Elasticsearch",
 ) as dag:
 
