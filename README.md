@@ -1,4 +1,4 @@
-# **BIDS-ETL: An Integrated Framework for Scalable Management and Monitoring of Multimodal Neuroimaging Data**
+# **NeuroBIDS-Pipeline: An Integrated Framework for Scalable Management and Monitoring of Multimodal Neuroimaging Data**
 
 ## **Overview**
 
